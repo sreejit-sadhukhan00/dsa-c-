@@ -107,11 +107,6 @@ void deleteNode(int position,Node* &head,Node* &tail){
      }
 }
 
-
-
-
-
-
 int main(){
     Node* node1=new Node(10);
     //  head pointer to node1
