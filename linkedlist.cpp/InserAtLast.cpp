@@ -1,4 +1,5 @@
 #include<iostream>
+#include<map>
 using namespace std;
 
 class Node{
@@ -107,25 +108,103 @@ void deleteNode(int position,Node* &head,Node* &tail){
      }
 }
 
+
+bool detectLoop(Node* head){
+    if(head==NULL){
+        return false;
+    }
+
+    map<Node*, bool> visited;
+
+    Node* temp=head;
+    while(temp!=NULL ){
+
+        if(visited[temp]==true){
+            return true;
+        }
+
+        visited[temp]=true;
+        temp=temp->next;
+    }
+    return false;
+}
+
+Node* floydCycleDetection(Node* head){
+    if(head==NULL){
+        return NULL;
+    }
+
+    Node* slow=head;
+    Node* fast=head;
+
+    while(fast!=NULL && fast->next!=NULL){
+        slow=slow->next;
+        fast=fast->next->next;
+
+        if(slow==fast){
+            cout<<"present at"<<slow->data<<endl;
+            return slow;
+        }
+    }
+}
+
+Node* getCycleStart(Node* head){
+ if(head==NULL){
+    return NULL;
+ }
+ Node* intersection=floydCycleDetection(head);
+
+ Node* slow=head;
+
+ while(slow!=intersection){
+    slow=slow->next;
+    intersection=intersection->next;
+ }
+ return slow;
+}
+
+void removeLoop(Node* &head){
+    if(head==NULL){
+        return ;
+    }
+
+    Node* Loopstart=head;
+    Node* temp=head;
+    
+    while(temp->next!=Loopstart){
+        temp=temp->next;
+    }
+    temp->next=NULL;
+     
+}
+
 int main(){
     Node* node1=new Node(10);
     //  head pointer to node1
     Node* Head=node1;
     Node* tail=node1;
-     print(Head);
      InsertATTail(tail,76);
-     print(Head);
      InsertATTail(tail,98);
-     print(Head);
-
      InsertAtpos(4,79,Head,tail);
-     print(Head);
     
-     cout<<"after deleting"<<endl;
-     deleteNode(4,Head,tail);
-      print(Head);
+    //  cout<<"after deleting"<<endl;
+    //  deleteNode(4,Head,tail);
+       print(Head);
 
-      cout<<"head"<<Head->data<<endl;
-      cout<<"tail"<<tail->data<<endl;
+      tail->next=Head->next;
+     if(detectLoop(Head)){
+        cout<<"Loop is present "<<endl;
+     } else{
+        cout<<"no cycle detected "<<endl;
+     }
+
+        Node* cycleStart=getCycleStart(Head);
+    
+        removeLoop(cycleStart);
+        print(Head);
+        // cout<<"cycle starts at"<<cycleStart->data<<endl;
+
+    //   cout<<"head"<<Head->data<<endl;
+    //   cout<<"tail"<<tail->data<<endl;
 
 }
